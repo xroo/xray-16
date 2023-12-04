@@ -33,3 +33,8 @@
 #ifdef _EDITOR
 #include "utils/ETools/ETools.h"
 #endif
+
+#if __has_include(<phonon.h>)
+#   include <phonon.h>
+#   define USE_PHONON
+#endif
