@@ -29,3 +29,8 @@
 #include "Sound.h"
 
 #include "xrCore/xr_resource.h"
+
+#if __has_include(<phonon.h>)
+#   include <phonon.h>
+#   define USE_PHONON
+#endif

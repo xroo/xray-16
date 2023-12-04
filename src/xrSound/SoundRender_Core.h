@@ -57,6 +57,11 @@ protected:
 
     CSoundRender_Effects* m_effects{};
 
+#ifdef USE_PHONON
+    IPLContext ipl_context{};
+    IPLHRTF ipl_hrtf{};
+#endif
+
 public:
     bool supports_float_pcm{};
 
