@@ -7,6 +7,7 @@ class CSoundRender_Emitter;
 class CSoundRender_Scene final : public ISoundScene
 {
 public:
+    CSoundRender_Scene();
     ~CSoundRender_Scene() override;
 
     void stop_emitters() const override;
@@ -43,6 +44,12 @@ public:
     auto& get_prev_events_count() { return s_events_prev_count; }
 
     auto& get_emitters() { return s_emitters; }
+
+public:
+#ifdef USE_PHONON
+    IPLScene ipl_scene{};
+    IPLSimulator ipl_simulator{};
+#endif
 
 private:
     xr_vector<CSoundRender_Emitter*> s_emitters;

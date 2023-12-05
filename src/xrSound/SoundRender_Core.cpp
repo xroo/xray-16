@@ -277,6 +277,28 @@ void CSoundRender_Core::update_listener(const Fvector& P, const Fvector& D, cons
 
     m_effects->set_listener(e_current);
     m_effects->commit();
+
+#ifdef USE_PHONON
+    const IPLCoordinateSpace3 listenerCoordinates
+    {
+        { 1, 0, 0 },
+        { 0, 1, 0 },
+        { 0, 0, 1 },
+        reinterpret_cast<const IPLVector3&>(listener_position())
+    }; // the world-space position and orientation of the listener
+
+    IPLSimulationSharedInputs sharedInputs
+    {
+        listenerCoordinates,
+        4096, 16,
+        2.0f, 1,
+        1.0f,
+        nullptr, nullptr
+    };
+
+    for (const auto scene : m_scenes)
+        iplSimulatorSetSharedInputs(scene->ipl_simulator, IPL_SIMULATIONFLAGS_DIRECT, &sharedInputs);
+#endif
 }
 
 void CSoundRender_Core::refresh_sources()

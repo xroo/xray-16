@@ -57,6 +57,7 @@ protected:
 
     CSoundRender_Effects* m_effects{};
 
+public:
 #ifdef USE_PHONON
     IPLContext ipl_context{};
     IPLHRTF ipl_hrtf{};
