@@ -34,7 +34,7 @@
 #include "utils/ETools/ETools.h"
 #endif
 
-#if __has_include(<phonon.h>)
+#if __has_include(<phonon.h>) && defined(XR_PLATFORM_WINDOWS)
 #   include <phonon.h>
 #   define USE_PHONON
 #endif

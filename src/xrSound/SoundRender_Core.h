@@ -57,12 +57,12 @@ protected:
 
     CSoundRender_Effects* m_effects{};
 
+public:
 #ifdef USE_PHONON
     IPLContext ipl_context{};
     IPLHRTF ipl_hrtf{};
 #endif
 
-public:
     // Cache
     CSoundRender_Cache cache;
     u32 cache_bytes_per_line;
