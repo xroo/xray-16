@@ -42,14 +42,6 @@ target_sources_grouped(
 
 target_sources_grouped(
     TARGET xrSound
-    NAME "Environment"
-    FILES
-    SoundRender_Environment.cpp
-    SoundRender_Environment.h
-)
-
-target_sources_grouped(
-    TARGET xrSound
     NAME "Kernel"
     FILES
     Sound.cpp
