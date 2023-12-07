@@ -38,6 +38,8 @@ public:
     CSoundRender_Scene* scene{};
 #ifdef USE_PHONON
     IPLSource ipl_source{};
+    IPLBinauralEffect ipl_binauralEffect{};
+    IPLAudioSettings emitterAudioSettings{ 44100, 1024 };
 #endif
 
     ref_sound owner_data;

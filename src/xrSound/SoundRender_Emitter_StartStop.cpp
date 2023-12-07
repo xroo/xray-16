@@ -34,6 +34,16 @@ void CSoundRender_Emitter::start(const ref_sound& _owner, u32 flags, float delay
     }
     bStopping = FALSE;
     bRewind = FALSE;
+
+#ifdef USE_PHONON
+    const auto wvf = source()->m_wformat;
+    unsigned long buf_block = sdef_target_block * wvf.nAvgBytesPerSec / 1000;
+    const IPLint32 samples_per_buf_block = buf_block / (wvf.wBitsPerSample * wvf.nChannels);
+
+    IPLBinauralEffectSettings effectSettings{};
+    effectSettings.hrtf = SoundRender->ipl_hrtf;
+    iplBinauralEffectCreate(SoundRender->ipl_context, &emitterAudioSettings, &effectSettings, &ipl_binauralEffect);
+#endif
 }
 
 void CSoundRender_Emitter::i_stop()

@@ -231,6 +231,15 @@ void CSoundRender_TargetA::fill_block(ALuint BufferID)
 
     iplDirectEffectApply(ipl_effect, &outputs.direct, &ipl_buffer_deinterleaved, &ipl_buffer_interleaved);
 
+    IPLBinauralEffectParams params{};
+    Fvector listenerPos = SoundRender->listener_position();
+    params.direction = IPLVector3{ listenerPos.x - m_pEmitter->p_source.position.x, listenerPos.y - m_pEmitter->p_source.position.y, listenerPos.z - m_pEmitter->p_source.position.z }; // direction from listener to source
+    params.hrtf = SoundRender->ipl_hrtf;
+    params.interpolation = IPL_HRTFINTERPOLATION_NEAREST; // see below
+    params.spatialBlend = 1.0f; // see below
+    params.peakDelays = nullptr;
+    iplBinauralEffectApply(m_pEmitter->ipl_binauralEffect, &params, &ipl_buffer_deinterleaved, &ipl_buffer_interleaved);
+
     iplAudioBufferInterleave(SoundRender->ipl_context, &ipl_buffer_interleaved, (IPLfloat32*)g_target_temp_data.data());
 #endif
 
