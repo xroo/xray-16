@@ -13,7 +13,13 @@ class CSoundRender_TargetA : public CSoundRender_Target
     float cache_gain;
     float cache_pitch;
 
-    ALuint buf_block;
+#ifdef USE_PHONON
+    IPLAudioBuffer ipl_buffer_deinterleaved{};
+    IPLAudioBuffer ipl_buffer_interleaved{};
+    IPLDirectEffect ipl_effect{};
+#endif
+
+    ALsizei buf_block;
     void fill_block(ALuint BufferID);
 
 public:
