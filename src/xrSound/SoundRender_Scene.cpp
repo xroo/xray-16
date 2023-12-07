@@ -52,6 +52,10 @@ CSoundRender_Scene::~CSoundRender_Scene()
         xr_delete(emit);
     s_emitters.clear();
 
+    set_geometry_env(nullptr);
+    set_geometry_som(nullptr);
+    set_geometry_occ(nullptr);
+
 #ifdef USE_PHONON
     iplSimulatorRelease(&ipl_simulator);
     iplSceneRelease(&ipl_scene);
@@ -80,7 +84,46 @@ int CSoundRender_Scene::pause_emitters(bool pauseState)
 
 void CSoundRender_Scene::set_handler(sound_event* E) { sound_event_handler = E; }
 
-void CSoundRender_Scene::set_geometry_occ(CDB::MODEL* M) { geom_MODEL = M; }
+void CSoundRender_Scene::set_geometry_occ(CDB::MODEL* M)
+{
+#ifdef USE_PHONON
+    if (geom_MODEL != M && ipl_scene_mesh)
+    {
+        iplStaticMeshRemove(ipl_scene_mesh, ipl_scene);
+        iplStaticMeshRelease(&ipl_scene_mesh);
+    }
+    if (M)
+    {
+        const auto tris = M->get_tris();
+        const auto tris_count = M->get_tris_count();
+
+        const auto verts = M->get_verts();
+        const auto verts_count = M->get_verts_count();
+
+        auto* temp_tris = xr_alloc<IPLTriangle>(tris_count);
+
+        for (size_t i = 0; i < tris_count; ++i)
+        {
+            temp_tris[i] = reinterpret_cast<IPLTriangle&>(tris[i].verts);
+        }
+
+        IPLStaticMeshSettings staticMeshSettings
+        {
+            verts_count, tris_count, 0,
+            reinterpret_cast<IPLVector3*>(verts), temp_tris,
+            nullptr, nullptr
+        };
+
+        iplStaticMeshCreate(ipl_scene, &staticMeshSettings, &ipl_scene_mesh);
+        xr_free(temp_tris);
+
+        iplStaticMeshAdd(ipl_scene_mesh, ipl_scene);
+        iplSceneCommit(ipl_scene);
+    }
+#endif
+
+    geom_MODEL = M;
+}
 
 void CSoundRender_Scene::set_geometry_som(IReader* I)
 {
