@@ -81,6 +81,8 @@ void CSoundRender_CoreA::_initialize()
     supports_float_pcm = alIsExtensionPresent("AL_EXT_FLOAT32")  // first is OpenAL Soft,
                       || alIsExtensionPresent("AL_EXT_float32"); // second is macOS
 
+    const bool bformat_ex = alIsExtensionPresent("AL_SOFT_bformat_ex");
+
     inherited::_initialize();
 
     // Pre-create targets
