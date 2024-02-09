@@ -283,7 +283,7 @@ bool CHW::CreateSwapChain(HWND hwnd)
     Caps.fTarget = dx11TextureUtils::ConvertTextureFormat(sd.BufferDesc.Format);
 
     // Buffering
-    BackBufferCount = 1;
+    BackBufferCount = 2;
     sd.BufferCount = BackBufferCount;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
@@ -292,13 +292,7 @@ bool CHW::CreateSwapChain(HWND hwnd)
     sd.SampleDesc.Quality = 0;
 
     // Windoze
-    /* XXX:
-       Probably the reason of weird tearing
-       glitches reported by Shoker in windowed
-       mode with VSync enabled.
-       XXX: Fix this windoze stuff!!!
-    */
-    sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
     sd.OutputWindow = hwnd;
 
@@ -341,7 +335,7 @@ bool CHW::CreateSwapChain2(HWND hwnd)
     Caps.fTarget = dx11TextureUtils::ConvertTextureFormat(desc.Format);
 
     // Buffering
-    BackBufferCount = 1; // For DXGI_SWAP_EFFECT_FLIP_DISCARD we need at least two
+    BackBufferCount = 2;
     desc.BufferCount = BackBufferCount;
     desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
@@ -350,8 +344,7 @@ bool CHW::CreateSwapChain2(HWND hwnd)
     desc.SampleDesc.Quality = 0;
 
     // Windoze
-    //desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; // XXX: tearing glitches with flip presentation model
-    desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     desc.Scaling = DXGI_SCALING_STRETCH;
 
     DXGI_SWAP_CHAIN_FULLSCREEN_DESC fulldesc{};
@@ -497,16 +490,6 @@ void CHW::Present()
     const bool bUseVSync = psDeviceMode.WindowStyle == rsFullscreen &&
         psDeviceFlags.test(rsVSync); // xxx: weird tearing glitches when VSync turned on for windowed mode in DX11
     m_pSwapChain->Present(bUseVSync ? 1 : 0, 0);
-#ifdef HAS_DX11_2
-    if (m_pSwapChain2 && UsingFlipPresentationModel())
-    {
-        const float fps = Device.GetStats().fFPS;
-        if (fps < 30)
-            m_pSwapChain2->SetSourceSize(UINT(Device.dwWidth * 0.85f), UINT(Device.dwHeight * 0.85f));
-        else if (fps < 15)
-            m_pSwapChain2->SetSourceSize(UINT(Device.dwWidth * 0.7f), UINT(Device.dwHeight * 0.7f));
-    }
-#endif
     CurrentBackBuffer = (CurrentBackBuffer + 1) % BackBufferCount;
 }
 

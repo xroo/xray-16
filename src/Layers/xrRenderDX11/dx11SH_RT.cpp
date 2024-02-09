@@ -94,7 +94,10 @@ void CRT::create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCount /*= 1*/
             u32 idx;
             char const* str = strrchr(Name, '_');
             sscanf(++str, "%u", &idx);
-            R_CHK(HW.m_pSwapChain->GetBuffer(idx, __uuidof(ID3DTexture2D), (LPVOID*)&pSurface));
+            if (HW.m_pSwapChain2)
+                R_CHK(HW.m_pSwapChain2->GetBuffer(0, __uuidof(ID3DTexture2D), (LPVOID*)&pSurface));
+            else
+                R_CHK(HW.m_pSwapChain->GetBuffer(idx, __uuidof(ID3DTexture2D), (LPVOID*)&pSurface));
         }
     }
 
