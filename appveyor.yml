@@ -72,8 +72,6 @@ for:
     - git submodule update --init --recursive
 
   build_script:
-    - ${CXX} --version
-    - cmake --version
     - export core_count=$(nproc || echo 4) && echo core_count = $core_count
     - CFLAGS="-w" CXXFLAGS="-w" cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
     - cmake --build build --config $BUILD_CONFIGURATION --parallel $core_count
