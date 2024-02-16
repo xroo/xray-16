@@ -8,7 +8,7 @@ skip_branch_with_pr: true
 
 image:
 - Visual Studio 2022
-- Ubuntu
+- Ubuntu2204
 
 configuration:
 - Debug
@@ -26,11 +26,11 @@ branches:
 
 matrix:
   exclude:
-    - image: Ubuntu
+    - image: Ubuntu2204
       platform: x86
-    - image: Ubuntu
+    - image: Ubuntu2204
       configuration: Mixed
-    - image: Ubuntu
+    - image: Ubuntu2204
       configuration: Release Master Gold
 
 cache:
@@ -64,7 +64,7 @@ for:
 -
   matrix:
     only:
-      - image: Ubuntu
+      - image: Ubuntu2204
 
   before_build:
     - sudo apt-get update
