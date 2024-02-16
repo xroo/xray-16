@@ -73,9 +73,9 @@ for:
 
   build_script:
     - export core_count=$(nproc || echo 4) && echo core_count = $core_count
-    - CFLAGS="-w" CXXFLAGS="-w" cmake -B build -DCMAKE_BUILD_TYPE=$BUILD_CONFIGURATION
-    - cmake --build build --config $BUILD_CONFIGURATION --parallel $core_count
-    - cpack -B artifacts -C $BUILD_CONFIGURATION -DCPACK_THREADS=$core_count
+    - CFLAGS="-w" CXXFLAGS="-w" cmake -B build -DCMAKE_BUILD_TYPE=%CONFIGURATION%
+    - cmake --build build --config %CONFIGURATION% --parallel $core_count
+    - cpack -B artifacts -C %CONFIGURATION% -DCPACK_THREADS=$core_count
     - file openxray_1.6.02_*.deb
 
   artifacts:
